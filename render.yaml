@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: buruburu-demo
+    runtime: node
+    plan: free
+    rootDir: mobile
+    buildCommand: npm ci --include=dev && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    autoDeploy: false
+    envVars:
+      - key: NODE_VERSION
+        value: 24.22.1
+      - key: HOST
+        value: 0.0.0.0
+      - key: DB_PATH
+        value: /tmp/buruburu-demo.sqlite
+      - key: VITE_DEMO_SHARED
+        value: "true"

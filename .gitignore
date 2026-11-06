@@ -1,0 +1,8 @@
+node_modules/
+mobile/dist/
+mobile/public/ocr/
+mobile/.data/
+mobile/test-results/
+mobile/playwright-report/
+.env
+*.log
