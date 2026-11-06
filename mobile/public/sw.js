@@ -1,5 +1,7 @@
 // Cache the app shell and OCR assets only; never cache shared financial data.
-const CACHE = "buruburu-v1";
+const BASE = new URL(self.registration.scope).pathname;
+const PREFIX = "buruburu-" + BASE + "-";
+const CACHE = PREFIX + "v1";
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches
@@ -20,7 +22,7 @@ self.addEventListener("activate", (event) => {
       .keys()
       .then((keys) =>
         Promise.all(
-          keys.filter((k) => k !== CACHE).map((k) => caches.delete(k)),
+          keys.filter((k) => k.startsWith(PREFIX) && k !== CACHE).map((k) => caches.delete(k)),
         ),
       ),
   );
@@ -30,6 +32,7 @@ self.addEventListener("fetch", (event) => {
   if (
     event.request.method !== "GET" ||
     u.origin !== self.location.origin ||
+    !u.pathname.startsWith(BASE) ||
     u.pathname.startsWith("/api/")
   )
     return;
@@ -45,7 +48,7 @@ self.addEventListener("fetch", (event) => {
       .catch(async () => {
         const match = await caches.match(event.request);
         if (match) return match;
-        if (event.request.mode === "navigate") return await caches.match("/");
+        if (event.request.mode === "navigate") return await caches.match(BASE);
         throw Error("Sin conexión");
       }),
   );

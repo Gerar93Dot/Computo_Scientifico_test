@@ -97,3 +97,22 @@ La raíz del repositorio incluye `render.yaml`, que prepara un servicio **Free**
 La instancia gratuita puede suspenderse por inactividad y tardar en responder al volver a abrirla. Su disco es temporal: los grupos compartidos pueden desaparecer en reinicios o despliegues. La aplicación muestra un aviso y permite exportar los gastos. Los datos del modo personal permanecen en el navegador. Para datos compartidos duraderos se necesita almacenamiento persistente y revisar el coste del proveedor; esta plantilla no activa un plan de pago.
 
 Preparar o subir esta plantilla no publica por sí solo la aplicación. El enlace público existe únicamente después de crear el servicio en la cuenta de Render.
+
+## Probar sin crear otra cuenta: GitHub Pages
+
+La rama `gh-pages` contiene una compilación de prueba para el modo personal. Usa la cuenta de GitHub existente; no necesita Render ni claves de OCR. Los productos, repartos e historial se guardan en cada navegador; esta publicación estática no incluye sincronización entre teléfonos.
+
+Para activarla, en GitHub abre **Settings → Pages → Build and deployment → Deploy from a branch**, elige **gh-pages**, carpeta **/(root)** y pulsa **Save**. GitHub indicará el enlace cuando termine de publicar. Si el repositorio es privado y el plan no permite Pages, no cambies su visibilidad sin revisar primero qué archivos se harían públicos.
+
+La dirección prevista es `https://gerar93dot.github.io/Computo_Scientifico_test/`. Subir la rama no confirma por sí solo que Pages esté activado.
+
+Para regenerar y probar esta versión:
+
+```bash
+cd mobile
+npm ci
+npm run build:pages
+npx playwright test -c playwright.pages.config.ts
+```
+
+Publica únicamente el contenido de `mobile/dist/` en la raíz de la rama `gh-pages`; no incluyas bases de datos ni archivos personales. La versión completa con servidor se sigue compilando con `npm run build`.

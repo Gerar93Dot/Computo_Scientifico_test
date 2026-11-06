@@ -21,9 +21,9 @@ export async function recognize(file: File, progress: (value: number) => void) {
   context.drawImage(image, 0, 0, canvas.width, canvas.height);
   image.close();
   const worker = await createWorker(["spa", "eng"], 1, {
-    workerPath: "/ocr/worker.min.js",
-    corePath: "/ocr",
-    langPath: "/ocr",
+    workerPath: `${import.meta.env.BASE_URL}ocr/worker.min.js`,
+    corePath: `${import.meta.env.BASE_URL}ocr`,
+    langPath: `${import.meta.env.BASE_URL}ocr`,
     logger: (m) => {
       if (m.status === "recognizing text")
         progress(Math.round(m.progress * 100));

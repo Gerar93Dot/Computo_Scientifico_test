@@ -13,7 +13,8 @@
     "start": "NODE_ENV=production tsx server/index.ts",
     "assets": "node scripts/assets.mjs",
     "test": "tsx --test tests/*.test.ts",
-    "test:browser": "playwright test"
+    "test:browser": "playwright test",
+    "build:pages": "VITE_LOCAL_ONLY=true VITE_BASE_PATH=/Computo_Scientifico_test/ npm run build"
   },
   "dependencies": {
     "express": "^5.1.0",

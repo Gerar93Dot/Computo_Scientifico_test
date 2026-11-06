@@ -33,6 +33,7 @@ const newRow = (): Draft => ({
   amount: "",
   participants: [],
 });
+const localOnly = import.meta.env.VITE_LOCAL_ONLY === "true";
 function App() {
   const [group, setGroup] = useState<Group>(emptyGroup),
     [session, setSession] = useState<Session | null>(null);
@@ -78,7 +79,7 @@ function App() {
       apply(readLocal());
       setReady(true);
       const stored = sessionStorage.getItem("buruburu-session");
-      if (stored) {
+      if (stored && !localOnly) {
         const saved = parseInvite(stored);
         setBusy(true);
         request(`/groups/${saved.id}`, saved)
@@ -949,7 +950,7 @@ function App() {
                     importes.
                   </small>
                 </section>
-                <section className="card sharing">
+                {localOnly ? <section className="card"><h2>Prueba sin cuentas</h2><p>Administra el grupo completo desde este teléfono: escanea tickets, asigna productos y consulta los saldos. Los datos se guardan aquí. La sincronización entre teléfonos necesita la versión con servidor.</p></section> : <section className="card sharing">
                   {import.meta.env.VITE_DEMO_SHARED === "true" && (
                     <p className="warning" role="note">
                       Versión de prueba: los grupos compartidos pueden borrarse
@@ -977,7 +978,7 @@ function App() {
                       <button
                         onClick={() =>
                           action(async () => {
-                            const link = `${location.origin}/#grupo=${invitation}`;
+                            const link = `${location.origin}${import.meta.env.BASE_URL}#grupo=${invitation}`;
                             if (navigator.share)
                               await navigator.share({
                                 title: `Buruburu · ${group.name}`,
@@ -1030,7 +1031,7 @@ function App() {
                     El modo compartido requiere conexión. Tu grupo personal se
                     conserva en este navegador.
                   </small>
-                </section>
+                </section>}
                 <section className="card">
                   <h2>Tus datos, contigo</h2>
                   <p>
@@ -1199,5 +1200,5 @@ function App() {
 createRoot(document.getElementById("root")!).render(<App />);
 if ("serviceWorker" in navigator && import.meta.env.PROD)
   window.addEventListener("load", () => {
-    void navigator.serviceWorker.register("/sw.js").catch(() => {});
+    void navigator.serviceWorker.register(`${import.meta.env.BASE_URL}sw.js`).catch(() => {});
   });
